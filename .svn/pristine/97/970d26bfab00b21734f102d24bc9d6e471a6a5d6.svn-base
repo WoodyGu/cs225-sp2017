@@ -1,0 +1,288 @@
+Exam #2 score (penggu2): 200/200
+
+=== Grade Feedback for Problem "programming_bigThree_createDtor_garden" ===
+[30/30]: Test: deleting a garden must not crash
+[70/70]: Test: valgrind clean
+     Message: all blocks freed
+=====
+[100/100]
+
+--- stdout ---
+g++ flower.cpp -std=c++1y -c -g -O0 -Wall -Wextra -pedantic
+g++ garden.cpp -std=c++1y -c -g -O0 -Wall -Wextra -pedantic
+g++ garden-test.cpp -std=c++1y -c -g -O0 -Wall -Wextra -pedantic
+g++ flower.o garden.o garden-test.o -std=c++1y -lpng -lpthread -o catch-tester
+g++ garden-test-valgrind.cpp flower.cpp garden.cpp -std=c++1y -lpng -lpthread -o garden-test-valgrind
+===============================================================================
+test cases: 1 | 1 passed
+assertions: - none -
+
+===============================================================================
+test cases: 1 | 1 passed
+assertions: - none -
+
+
+
+--- stderr ---
+
+
+--- submitted file: garden.cpp ---
+#include "flower.h"
+#include "garden.h"
+
+garden::garden(flower *flowers) {
+  this->grid = new flower*[4];
+
+  for (int i = 0; i < 4; i++) {
+    this->grid[i] = new flower[4];
+    for (int j = 0; j < 4; j++) {
+        this->grid[i][j] = flowers[(i*4) + j];
+    }
+  }
+}
+
+flower garden::getFlower(int row, int column) const {
+  return this->grid[row][column];
+}
+
+void garden::setFlower(int row, int column, const flower &f) {
+  this->grid[row][column] = f;
+}
+
+garden::~garden(){
+	for(int i = 0;i<4;i++){
+			delete[] grid[i];
+			grid[i] = NULL;
+	}
+	delete[] grid;
+}
+
+--- submitted file: garden.h ---
+#ifndef _GARDEN_H
+#define _GARDEN_H
+
+#include "flower.h"
+
+class garden {
+public:
+  garden(flower *flowers);
+
+  flower getFlower(int row, int column) const;
+  void setFlower(int row, int column, const flower &f);
+	~garden();
+
+private:
+  flower **grid;
+};
+
+#endif
+
+
+=== Grade Feedback for Problem "programming_operator_plus_backpack" ===
+[25/25]: Test: backpack member functions after adding backpacks
+[25/25]: Test: add an empty backpack to a backpack
+[25/25]: Test: add backpack to an empty backpack
+[25/25]: Test: add two full backpacks together
+=====
+[100/100]
+
+--- stdout ---
+g++ backpack.cpp -std=c++1y -c -g -O0 -Wall -Wextra -pedantic
+g++ backpack-test.cpp -std=c++1y -c -g -O0 -Wall -Wextra -pedantic
+g++ backpack.o backpack-test.o -std=c++1y -lpng -lpthread -o catch-tester
+5
+6
+7
+2
+2
+3
+3
+4
+5
+6
+7
+2
+2
+3
+3
+4
+5
+6
+7
+2
+2
+3
+3
+4
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+5
+5
+5
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+5
+5
+5
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+1
+2
+3
+4
+1
+2
+3
+4
+1
+2
+3
+4
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+5
+6
+7
+2
+2
+3
+3
+4
+5
+6
+7
+2
+2
+3
+3
+4
+5
+6
+7
+2
+2
+3
+3
+4
+5
+5
+5
+5
+5
+5
+1
+2
+3
+4
+1
+2
+3
+4
+1
+2
+3
+4
+===============================================================================
+All tests passed (12 assertions in 4 test cases)
+
+
+
+--- stderr ---
+
+
+--- submitted file: backpack.cpp ---
+#include "backpack.h"
+#include<iostream>
+using namespace std;
+//
+// In the `backpack` class, overload the `+` (plus) operator to add two
+// `backpack` classes.
+//
+// The result must be a `backpack` where:
+// - the result `size` is the sum of the `size` of each individual backpack, and
+// - the items (`items` and `item_weights`) in the result are the items from
+//  both backpacks
+//
+
+backpack::backpack(int size) : size(size), items(0) {
+  this->item_weights = new int[size];
+}
+
+bool backpack::addItem(int weight) {
+  if (items == size) {
+    // Cannot add if the backpack is full of items
+    return false;
+  } else {
+    // Otherwise, add the item
+    this->item_weights[this->items] = weight;
+    this->items++;
+    return true;
+  }
+}
+
+int backpack::getSize() const {
+  return this->size;
+}
+
+int backpack::getItemCount() const {
+  return this->items;
+}
+
+const int *backpack::getItems() const {
+  return this->item_weights;
+}
+
+backpack backpack::operator+(backpack a){
+	backpack target(this->getSize()+a.getSize());
+	target.items = this->getItemCount()+a.getItemCount();
+	target.item_weights = new int[target.items];
+	for(int i = 0;i<this->items;i++){
+		target.item_weights[i] = this->item_weights[i];
+	}
+	
+	for(int j = this->items;j<target.items;j++){
+		target.item_weights[j] = a.item_weights[j-this->items];
+	}
+	for(int k = 0;k<target.items;k++){
+		cout<<target.item_weights[k]<<endl;
+	}
+	return target;
+}
+
+--- submitted file: backpack.h ---
+#ifndef _BACKPACK_H
+#define _BACKPACK_H
+
+//
+// In the `backpack` class, overload the `+` (plus) operator to add two
+// `backpack` classes.
+//
+// The result must be a `backpack` where:
+// - the result `size` is the sum of the `size` of each individual backpack, and
+// - the items (`items` and `item_weights`) in the result are the items from
+//  both backpacks
+//
+
+class backpack {
+public:
+  backpack(int size);
+
+  int getSize() const;
+  int getItemCount() const;
+  const int *getItems() const;
+  bool addItem(int weight);
+	backpack operator+(backpack a);
+
+private:
+  int size;
+  int items;
+  int *item_weights;
+};
+
+#endif
+
+

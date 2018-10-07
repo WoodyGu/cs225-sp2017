@@ -1,0 +1,265 @@
+/* Your code here! */
+#include "maze.h"
+#include <stdlib.h>
+
+SquareMaze::SquareMaze(){
+  height = 0;
+  width = 0;
+}
+
+void SquareMaze::makeMaze(int width, int height)
+{
+  //initialize a grid
+  this->width = width;
+  this->height = height;
+  mazeArray = new mazeCell*[width];
+  for(int i = 0;i<width;i++){
+    mazeArray[i] = new mazeCell[height];
+    for(int j = 0;j<height;j++){
+      mazeArray[i][j].rightWall = true;
+      mazeArray[i][j].downWall = true;
+    }
+  }
+  //return;
+  srand(time(NULL));
+  //delete walls
+  mazeSet.addelements(width*height);
+  //pick a random starting point
+  std::vector<pair<int,int>> sequence;
+  for(int i = 0;i<width;i++){
+    for(int j = 0;j<width;j++){
+      std::pair<int,int> coords(i,j);
+      sequence.push_back(coords);
+    }
+  }
+  //random shuffle may be problematic
+  std::random_shuffle(sequence.begin(),sequence.end());
+  //should delete both walls as much as we can
+  for(size_t i = 0;i<sequence.size();i++){
+    //check for edge cases
+    if(sequence[i].first == width-1 &&sequence[i].second == height-1){//the bottom right one
+      continue;//can delete neither walls
+    }
+    else if(sequence[i].first == width-1){//cannot delete right wall
+      /*
+      if((rand()% 2) == 0){//delete right wall
+        continue;
+      }
+      */
+      //else{//delete down wall
+      int x = sequence[i].first;
+      int y = sequence[i].second;
+      int root1 = mazeSet.find(y*width+x);
+      int root2 = mazeSet.find((y+1)*width+x);
+      if(root1!=root2){
+        mazeArray[x][y].downWall = false;
+        mazeSet.setunion(y*width+x,(y+1)*width+x);
+      }
+      //}
+    }
+    else if(sequence[i].second == height-1){//cannot delete down wall
+      /*
+      if((rand()% 2) == 1){//delete downwall
+        continue;
+      }
+      */
+      //else{//delete rightWall
+      int x = sequence[i].first;
+      int y = sequence[i].second;
+      int root1 = mazeSet.find(y*width+x);
+      int root2 = mazeSet.find(y*width+x+1);
+      if(root1!=root2){
+        mazeArray[x][y].rightWall = false;
+        mazeSet.setunion(y*width+x,y*width+x+1);
+      }
+      //}
+    }
+    else{
+      //if((rand()% 2) == 1){//delete downwall
+      int x = sequence[i].first;
+      int y = sequence[i].second;
+      int root1 = mazeSet.find(y*width+x);
+      int root2 = mazeSet.find((y+1)*width+x);
+      if(root1!=root2){
+        mazeArray[x][y].downWall = false;
+        mazeSet.setunion(y*width+x,(y+1)*width+x);
+      }
+      //}
+      //else{//delete rightWall
+        //int x = sequence[i].first;
+        //int y = sequence[i].second;
+      root1 = mazeSet.find(y*width+x);
+      root2 = mazeSet.find(y*width+x+1);
+      if(root1!=root2){
+        mazeArray[x][y].rightWall = false;
+        mazeSet.setunion(y*width+x,y*width+x+1);
+      }
+      //}
+    }
+  }
+}
+
+bool SquareMaze::canTravel(int x, int y, int dir) const
+{
+  //bad inputs
+  if(x<0||x>width-1||y<0||y>height-1){
+    return false;
+  }
+  //rightward step: x must not be out of bound
+  if(dir == 0){
+    if(x == this->width-1){
+      return false;
+    }
+    else{
+      return !(mazeArray[x][y].rightWall);
+    }
+  }
+  //downward step
+  else if(dir == 1){
+    if(y == this->height-1){
+      return false;
+    }
+    else{
+      return !(mazeArray[x][y].downWall);
+    }
+  }
+  //leftward step
+  else if(dir == 2){
+    if(x == 0){
+      return false;
+    }
+    else{
+      return !(mazeArray[x-1][y].rightWall);
+    }
+  }
+  else{
+    if(y == 0){
+      return false;
+    }
+    else{
+      return !(mazeArray[x][y-1].downWall);
+    }
+  }
+}
+
+void SquareMaze::setWall(int x, int y, int dir, bool exists)
+{
+  //check for bad inputs
+  if(x<0||x>width-1||y<0||y>height-1){
+    return;
+  }
+  if(dir == 0){
+    mazeArray[x][y].rightWall = exists;
+  }
+  if(dir == 1){
+    mazeArray[x][y].downWall = exists;
+  }
+}
+
+vector<int> SquareMaze::solveMaze(){
+  /*
+  bool** visited = new bool*[width];
+  for(size_t i = 0;i<width;i++){
+    mazeArray[i] = new bool[height];
+    for(size_t j = 0;j<height;j++){
+      visited[i][j].rightWall = false;
+    }
+  }
+  return solveMazeHelper(0,0,width,height,visited);
+  */
+  return {};
+}
+
+/* Returns a string representation of the shortest path between
+	 * (x,y) and (tx,ty). e.g. a result of "NNEE"
+	 * means to travel from (x,y) -> (tx,ty) go North twice, then East twice.
+	 * blocked is a square boolean grid of points that cannot be used.
+	 * If(x,y) are invalid coords (outside of the grid array) this method returns null.
+	 * If(x,y) is on a blocked square, this method returns null. Otherwise,
+	 * If(x,y) are already the same as the target position, returns an empty string.
+	 * If there is no path between (x,y) and (tx,ty) the method returns null.
+	 *
+	 * Implementation notes:
+	 * Use the statements above for the base cases.
+	 * For the recursion part:
+	 * 1. Set the current position to blocked (so that the recursive method does not
+	 * attempt to re-use this square again)
+	 * 2. Collect all paths from the NSEW neighbors
+	 * 3. Reset the current blocked position to false.
+	 * 4. Use findShortestString to determine the shortest path
+	 * 5. If its non-null then PREPEND the compass direction of that neighbor's path.
+	 * e.g. if the Northern neighbor returned "EWWS"
+	 * the East neighbor returned "NWWWWWWWSEEEESS" and W and S Neighbor return null
+	 * then return "N" + "EWWS"
+	 * Otherwise, just return null as none of the neighbors found a path.
+	 */
+
+vector<int> SquareMaze::solveMazeHelper(int x,int y,int width, int height,bool** visited)
+{/*
+  if(x<0||y<0||x>=blocked.length||y>=blocked[0].length){
+    return {};
+  }
+  if(x==width-1||y == height-1){
+    return {};
+  }
+  if(visited[x][y]){
+    return {};
+  }
+  visited[x][y] = true;
+  //collect the results
+  if(canTravel(x,y,0)){
+    return solveMazeHelper(x+1,y,width,height,visited);
+  }
+  else if(canTravel(x,y,1)){
+    return solveMazeHelper(x,y+1,width,height,visited);
+  }
+  else if(canTravel(x,y,2)){
+    return solveMazeHelper(x-1,y,width,height,visited);
+  }
+  else if(canTravel(x,y,3)){
+    return solveMazeHelper(x,y-1,width,height,visited);
+  }
+  else{
+    return {};
+  }*/
+  return {};
+}
+
+PNG* SquareMaze::drawMaze()	const
+{
+  PNG* retimg = new PNG(this->width*10+1,this->height*10+1);
+  //set the boundries to black
+  RGBAPixel black(0,0,0);
+  for(int i = 0;i<=(width)*10;i++){
+    *((*retimg)(i,0)) = black;
+  }
+  for(int i = 0;i<=(height)*10;i++){
+    *((*retimg)(0,i)) = black;
+  }
+  RGBAPixel white(255,255,255);
+  for(int i = 1;i<10;i++){
+    *((*retimg)(i,0)) = white;
+  }
+  for(int x = 0;x<width;x++){//the coords for the boolean array
+    for(int y = 0;y<height;y++){
+      //color the right wall black
+      if(mazeArray[x][y].rightWall){
+        for(int k = 0;k<11;k++){
+          *((*retimg)((x+1)*10,y*10+k)) = black;
+        }
+      }
+      //color the downwall black
+      if(mazeArray[x][y].downWall){
+        for(int k = 0;k<11;k++){
+          *((*retimg)(x*10+k,(y+1)*10)) = black;
+        }
+      }
+    }
+  }
+  return retimg;
+}
+
+PNG * SquareMaze::drawMazeWithSolution() const{
+  PNG* retimg = new PNG(this->width*10+1,this->height*10+1);
+  return retimg;
+}

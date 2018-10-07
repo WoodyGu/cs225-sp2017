@@ -1,0 +1,23 @@
+Grading r26795 by penggu2 committed on Sat Mar  4 18:09:14 CST 2017
+Monad Autograder
+Testing lab_trees at 2017-03-06 00:21:53
+
+"It'll work, the stack's just not big enough." ~ Eric Rosenberg
+
+Setting up test environment...
+Compiling...
+================================================================
+
+
+Running tests...
+================================================================
+test_isOrdered  . [33 pts] - passed
+test_mirror . . . [33 pts] - passed
+test_printPaths . [34 pts] - passed
+test_sumDistances [25 pts] - passed
+
+
+Total score...
+================================================================
+TOTAL SCORE: 125
+
