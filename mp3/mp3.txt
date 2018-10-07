@@ -1,0 +1,223 @@
+temp = startPoint->prev;
+	startPoint->prev = start->prev;
+	startPoint->next = temp;
+	endPoint = start;
+	endPoint->next = end->next;
+	if(start->prev == NULL){
+		head = startPoint;
+	}
+	else{
+		start->prev->next = startPoint;
+	}
+	if(end->next == NULL){
+		tail = endPoint;
+	}else{
+		end->next->prev = endPoint;
+	}
+
+
+
+   ListNode* temp;
+    ListNode* holder;
+    ListNode* start = startPoint;
+    ListNode* end = endPoint;
+	if(startPoint == NULL||endPoint == NULL||startPoint==endPoint){
+		return;//a null list
+	}
+	while(startPoint != endPoint){
+		temp = startPoint->prev;
+		startPoint->prev = startPoint->next;
+		startPoint->next = temp;
+		startPoint = startPoint->prev;
+		cout<<"once done"<<endl;
+	}
+	holder = startPoint->prev;
+	startPoint->prev = start->prev;
+	startPoint->next = holder;
+	endPoint = start;
+	endPoint->next = end->next;
+	if(start->prev == NULL){
+		head = startPoint;
+	}else{
+		start->prev->next = startPoint;
+	}
+	if(end->next == NULL){
+		tail = endPoint;
+	}else{
+		end->next->prev = endPoint;
+	}	
+}
+
+holder = startPoint->prev;
+	startPoint->prev = start->prev;
+	startPoint->next = holder;
+	endPoint = start;
+	endPoint->next = end->next;
+
+
+holder = startPoint->prev;
+	startPoint->prev = start->prev;
+	startPoint->next = holder;
+	endPoint = start;
+	endPoint->next = end->next;
+
+if(start->prev == NULL){
+		head = endPoint;
+	}else{
+		start->prev->next = startPoint;
+	}
+	if(end->next == NULL){
+		tail = startPoint;
+	}else{
+		end->next->prev = endPoint;
+	}
+
+
+
+
+if(startPoint == head||endPoint==tail){
+		startPoint = end;
+		endPoint = start;
+	}
+	else{
+		startPoint = end;
+		endPoint = start;
+	}
+
+	ListNode* temp = startPoint;
+	ListNode* holder;
+	ListNode* startPrev = startPoint -> prev;
+    ListNode* start = startPoint;
+	ListNode* end = endPoint;
+    ListNode* endNext = endPoint -> next;
+    ListNode* tempNext = endNext;
+    
+    while (temp != end) {
+        if (temp != startPoint) {
+            tempNext = temp -> prev;
+        }
+        
+        temp->prev = temp->next;
+        temp->next = tempNext;
+        temp = temp->prev;
+    }
+    holder = temp->prev;
+    temp-> prev = startPrev;
+    temp-> next = holder;
+    if (endNext != NULL) {
+        endNext -> prev = start;
+    } else {
+        tail = start;
+    }
+    if (startPrev != NULL) {
+        startPrev -> next = end;
+    } else {
+        head = end;
+    }
+    startPoint = end;
+    endPoint = start;
+
+
+
+
+
+
+
+
+
+
+
+ListNode* newHead = NULL;
+    ListNode* curr = newHead;
+    if(first->data<second->data){
+    	newHead = first;
+    	first = first->next;
+    	curr = first;
+    }
+    else{
+    	newHead = second;
+    	second = second->next;
+    	curr = second;
+    }
+	while(first!=NULL&&second!=NULL){
+		if(first<second){
+			first = first->next;
+			curr = first;
+		}
+		else{
+			curr->prev->next = second;
+			second->prev = curr->prev;
+			second->next = curr;
+			curr->prev = second;
+			second = second->next;
+			curr = second;
+		}
+		cout<<"once done"<<endl;
+	}
+	if(second!=NULL){
+		first = second;
+	}
+	return newHead;
+}
+
+
+
+
+ListNode* newHead = NULL;
+    ListNode* curr = newHead;
+    ListNode* temp = NULL;
+    ListNode* tempF = NULL;
+    ListNode* tempS = NULL;
+    if(first->data<second->data){
+    	newHead = first;
+    	first = first->next;
+    	curr = first;
+    while(first!=NULL&&second!=NULL){
+		if(first->data<second->data){
+			tempF = first;
+			first = first->next;
+			curr = first;
+		}
+		else{
+			temp = second->next;
+			curr->prev->next = second;
+			second->prev = curr->prev;
+			second->next = curr;
+			curr->prev = second;
+			second = temp;
+			curr = temp;
+		}
+		cout<<"once done1"<<endl;
+	}
+	if(second!=NULL){
+		tempF->next = second;
+	}
+	return newHead;
+}
+    else{
+    	newHead = second;
+    	second = second->next;
+    	curr = second;
+    	while(first!=NULL&&second!=NULL){
+			if(first->data<second->data){
+				temp = first->next;
+				curr->prev->next = first;
+				first->prev = curr->prev;
+				first->next = curr;
+				curr->prev = first;
+				first = temp;
+				curr = temp;
+		}
+		else{
+			tempS = second;
+			second = second->next;
+			curr = second;
+		}
+		cout<<"once done2"<<endl;
+	}
+	if(first!=NULL){
+		tempS->next = first;
+	}
+	return newHead;
+	}
+	cout<<"finished"<<endl;

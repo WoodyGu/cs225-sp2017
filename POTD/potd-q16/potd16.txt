@@ -1,0 +1,16 @@
+The Problem
+
+Complete the function printList that accepts a node * (the head of a linked list) as a parameter and print out the list in the following format:
+
+Node 0: 100
+Node 1: 200
+Node 2: 300
+
+If the list is empty then the function should print "Empty list".
+
+You should complete the main function to test your printList in, at least, the following cases:
+
+    An empty list
+    A list with exactly one node
+    A list with more than one node (eg: 100 -> 200 -> 300, as shown above)
+

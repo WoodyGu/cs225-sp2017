@@ -1,0 +1,54 @@
+tuple<int,int,vector<int>> coords(0,0,{});
+  queue<tuple<int,int,vector<int>>> q;
+  visited[0][0] = true;
+  vector<tuple<int,int,vector<int>>> destination;
+  q.push(coords);
+  while(!q.empty()){
+    //create temp cord
+    tuple<int,int,vector<int>> currCoord = q.front();
+    //set visited to true
+    visited[get<0>(currCoord)][get<1>(currCoord)] = true;
+    if(get<1>(currCoord) == height-1){//reached the bottom of the maze
+      destination.push_back(currCoord);
+    }
+    q.pop();
+    if(canTravel(get<0>(currCoord),get<1>(currCoord),0)&&!visited[get<0>(currCoord)+1][get<1>(currCoord)]){
+      visited[get<0>(currCoord)+1][get<1>(currCoord)] = true;
+      vector<int> temp = get<2>(currCoord);
+      temp.push_back(0);
+      tuple<int,int,vector<int>> nextR(get<0>(currCoord)+1,get<1>(currCoord),temp);
+      q.push(nextR);
+    }
+    if(canTravel(get<0>(currCoord),get<1>(currCoord),1)&&!visited[get<0>(currCoord)][get<1>(currCoord)+1]){
+      visited[get<0>(currCoord)][get<1>(currCoord)+1] = true;
+      vector<int> temp = get<2>(currCoord);
+      temp.push_back(1);
+      tuple<int,int,vector<int>> nextD(get<0>(currCoord),get<1>(currCoord)+1,temp);
+      q.push(nextD);
+    }
+    if(canTravel(get<0>(currCoord),get<1>(currCoord),2)&&!visited[get<0>(currCoord)-1][get<1>(currCoord)]){
+      visited[get<0>(currCoord)-1][get<1>(currCoord)+1] = true;
+      vector<int> temp = get<2>(currCoord);
+      temp.push_back(2);
+      tuple<int,int,vector<int>> nextL(get<0>(currCoord)-1,get<1>(currCoord),temp);
+      q.push(nextL);
+    }
+    if(canTravel(get<0>(currCoord),get<1>(currCoord),3)&&!visited[get<0>(currCoord)][get<1>(currCoord)-1]){
+      visited[get<0>(currCoord)][get<1>(currCoord)-1] = true;
+      vector<int> temp = get<2>(currCoord);
+      temp.push_back(3);
+      tuple<int,int,vector<int>> nextU(get<0>(currCoord),get<1>(currCoord)-1,temp);
+      q.push(nextU);
+    }
+  }
+  vector<int> solution = {};
+
+  for(size_t i = 0;i<destination.size();i++){
+    if(get<2>(destination[i]).size()>solution.size()){
+      solution = get<2>(destination[i]);
+    }
+  }
+  //determine the longest distance from the starting point
+  //delete the visited bool array
+  //return the soln vector
+  return solution;

@@ -1,0 +1,9 @@
+The Problem
+
+In main.cpp, write a templated function more which takes in two variables of the same type and returns whichever variable is greater than (>) the other.
+
+You can and may need to add something to the food class in order for more to be able to be called properly.
+Expected Output
+
+We have more apples.
+

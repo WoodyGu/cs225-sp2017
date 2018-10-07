@@ -1,0 +1,14 @@
+The Problem
+
+Write a class pet that is derived from the animal class
+
+    In addition to the type and food variables, pet should have a private variable name and private variable owner_name.
+    Write functions that get and set the type of food, name, and owner name of the pet class.
+    Write a function print that prints "My name is ." where the blank is the value of the name variable.
+    Write a default constructor for pet that initializes type to cat, food to fish, name to "Fluffy", and owner_name to "Cinda" and a 			constructor that takes in the type of animal, type of food, name, and owner name as parameters.
+
+Create a main function in main.cpp and produce the following output by calling only the print functions in the animal and pet classes:
+
+I am a cat.
+My name is Garfield.
+
